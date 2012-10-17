@@ -18,6 +18,7 @@ package com.android.inputmethod.latin;
 
 import android.content.Context;
 import android.content.pm.PackageManager;
+import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
@@ -33,6 +34,7 @@ import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.Keyboard.Key;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Process;
 import android.os.SystemClock;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -165,7 +167,7 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
 
     // XML attribute
     private int mKeyTextSize;
-    private int mKeyTextColor;
+    private ColorStateList mKeyTextColorStateList;
     private Typeface mKeyTextStyle = Typeface.DEFAULT;
     private int mLabelTextSize;
     private int mSymbolColorScheme = 0;
@@ -234,8 +236,6 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
     // Drawing
     /** Whether the keyboard bitmap needs to be redrawn before it's blitted. **/
     private boolean mDrawPending;
-    /** The dirty region in the keyboard bitmap */
-    private final Rect mDirtyRect = new Rect();
     /** The keyboard bitmap for faster updates */
     private Bitmap mBuffer;
     /** Notes if the keyboard just changed, so that we could possibly reallocate the mBuffer. */
@@ -245,7 +245,6 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
     private Canvas mCanvas;
     private final Paint mPaint;
     private final Rect mPadding;
-    private final Rect mClipRegion = new Rect(0, 0, 0, 0);
     // This map caches key label text height in pixel as value and key label text size as map key.
     private final HashMap<Integer, Integer> mTextHeightCache = new HashMap<Integer, Integer>();
     // Distance from horizontal center of the key, proportional to key label text height.
@@ -435,7 +434,7 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
                 mKeyTextSize = a.getDimensionPixelSize(attr, 18);
                 break;
             case R.styleable.LatinKeyboardBaseView_keyTextColor:
-                mKeyTextColor = a.getColor(attr, 0xFF000000);
+                mKeyTextColorStateList = a.getColorStateList(attr);
                 break;
             case R.styleable.LatinKeyboardBaseView_labelTextSize:
                 mLabelTextSize = a.getDimensionPixelSize(attr, 14);
@@ -555,6 +554,8 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
         mHasDistinctMultitouch = context.getPackageManager()
                 .hasSystemFeature(PackageManager.FEATURE_TOUCHSCREEN_MULTITOUCH_DISTINCT);
         mKeyRepeatInterval = res.getInteger(R.integer.config_key_repeat_interval);
+
+        Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_DISPLAY);
     }
 
     public void setOnKeyboardActionListener(OnKeyboardActionListener listener) {
@@ -755,6 +756,96 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
             onBufferDraw();
         }
         canvas.drawBitmap(mBuffer, 0, 0, null);
+        drawKey(canvas);
+    }
+
+    private void drawKey(Canvas canvas) {
+        if (mKeyboard == null) return;
+        if (mInvalidatedKey == null) return;
+
+        final Paint paint = mPaint;
+        final Drawable keyBackground = mKeyBackground;
+        final Rect padding = mPadding;
+        final int kbdPaddingLeft = getPaddingLeft();
+        final int kbdPaddingTop = getPaddingTop();
+        final Key key = mInvalidatedKey;
+
+        int[] drawableState = key.getCurrentDrawableState();
+        keyBackground.setState(drawableState);
+        int keyTextColor = mKeyTextColorStateList.getColorForState(drawableState, 0);
+        paint.setColor(keyTextColor);
+
+        // Switch the character to uppercase if shift is pressed
+        String label = key.label == null? null : adjustCase(key.label).toString();
+
+        final Rect bounds = keyBackground.getBounds();
+        if (key.width != bounds.right || key.height != bounds.bottom) {
+            keyBackground.setBounds(0, 0, key.width, key.height);
+        }
+        canvas.translate(key.x + kbdPaddingLeft, key.y + kbdPaddingTop);
+        keyBackground.draw(canvas);
+
+        boolean shouldDrawIcon = true;
+        if (label != null) {
+            // For characters, use large font. For labels like "Done", use small font.
+            final int labelSize;
+            if (label.length() > 1 && key.codes.length < 2) {
+                labelSize = mLabelTextSize;
+                paint.setTypeface(Typeface.DEFAULT_BOLD);
+            } else {
+                labelSize = mKeyTextSize;
+                paint.setTypeface(mKeyTextStyle);
+            }
+            paint.setTextSize(labelSize);
+
+            Integer labelHeightValue = mTextHeightCache.get(labelSize);
+            final int labelHeight;
+            if (labelHeightValue != null) {
+                labelHeight = labelHeightValue;
+            } else {
+                Rect textBounds = new Rect();
+                paint.getTextBounds(KEY_LABEL_HEIGHT_REFERENCE_CHAR, 0, 1, textBounds);
+                labelHeight = textBounds.height();
+                mTextHeightCache.put(labelSize, labelHeight);
+            }
+
+            // Draw a drop shadow for the text
+            paint.setShadowLayer(mShadowRadius, 0, 0, mShadowColor);
+            final int centerX = (key.width + padding.left - padding.right) / 2;
+            final int centerY = (key.height + padding.top - padding.bottom) / 2;
+            final float baseline = centerY
+                    + labelHeight * KEY_LABEL_VERTICAL_ADJUSTMENT_FACTOR;
+            canvas.drawText(label, centerX, baseline, paint);
+            // Turn off drop shadow
+            paint.setShadowLayer(0, 0, 0, 0);
+
+            // Usually don't draw icon if label is not null, but we draw icon for the number
+            // hint and popup hint.
+            shouldDrawIcon = shouldDrawLabelAndIcon(key);
+        }
+        if (key.icon != null && shouldDrawIcon) {
+            // Special handing for the upper-right number hint icons
+            final int drawableWidth;
+            final int drawableHeight;
+            final int drawableX;
+            final int drawableY;
+            if (shouldDrawIconFully(key)) {
+                drawableWidth = key.width;
+                drawableHeight = key.height;
+                drawableX = 0;
+                drawableY = NUMBER_HINT_VERTICAL_ADJUSTMENT_PIXEL;
+            } else {
+                drawableWidth = key.icon.getIntrinsicWidth();
+                drawableHeight = key.icon.getIntrinsicHeight();
+                drawableX = (key.width + padding.left - padding.right - drawableWidth) / 2;
+                drawableY = (key.height + padding.top - padding.bottom - drawableHeight) / 2;
+            }
+            canvas.translate(drawableX, drawableY);
+            key.icon.setBounds(0, 0, drawableWidth, drawableHeight);
+            key.icon.draw(canvas);
+            canvas.translate(-drawableX, -drawableY);
+        }
+        canvas.translate(-key.x - kbdPaddingLeft, -key.y - kbdPaddingTop);
     }
 
     private void onBufferDraw() {
@@ -764,47 +855,30 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
                 // Make sure our bitmap is at least 1x1
                 final int width = Math.max(1, getWidth());
                 final int height = Math.max(1, getHeight());
-                mBuffer = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+                mBuffer = Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565);
                 mCanvas = new Canvas(mBuffer);
             }
-            invalidateAllKeys();
             mKeyboardChanged = false;
         }
         final Canvas canvas = mCanvas;
-        canvas.clipRect(mDirtyRect, Op.REPLACE);
 
         if (mKeyboard == null) return;
 
         final Paint paint = mPaint;
         final Drawable keyBackground = mKeyBackground;
-        final Rect clipRegion = mClipRegion;
         final Rect padding = mPadding;
         final int kbdPaddingLeft = getPaddingLeft();
         final int kbdPaddingTop = getPaddingTop();
         final Key[] keys = mKeys;
-        final Key invalidKey = mInvalidatedKey;
 
-        paint.setColor(mKeyTextColor);
-        boolean drawSingleKey = false;
-        if (invalidKey != null && canvas.getClipBounds(clipRegion)) {
-            // TODO we should use Rect.inset and Rect.contains here.
-            // Is clipRegion completely contained within the invalidated key?
-            if (invalidKey.x + kbdPaddingLeft - 1 <= clipRegion.left &&
-                    invalidKey.y + kbdPaddingTop - 1 <= clipRegion.top &&
-                    invalidKey.x + invalidKey.width + kbdPaddingLeft + 1 >= clipRegion.right &&
-                    invalidKey.y + invalidKey.height + kbdPaddingTop + 1 >= clipRegion.bottom) {
-                drawSingleKey = true;
-            }
-        }
-        canvas.drawColor(0x00000000, PorterDuff.Mode.CLEAR);
+        canvas.drawColor(0xffffffff);
+        final int[] drawableState = { android.R.attr.state_enabled };
         final int keyCount = keys.length;
         for (int i = 0; i < keyCount; i++) {
             final Key key = keys[i];
-            if (drawSingleKey && invalidKey != key) {
-                continue;
-            }
-            int[] drawableState = key.getCurrentDrawableState();
             keyBackground.setState(drawableState);
+            int keyTextColor = mKeyTextColorStateList.getColorForState(drawableState, 0);
+            paint.setColor(keyTextColor);
 
             // Switch the character to uppercase if shift is pressed
             String label = key.label == null? null : adjustCase(key.label).toString();
@@ -878,7 +952,6 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
             }
             canvas.translate(-key.x - kbdPaddingLeft, -key.y - kbdPaddingTop);
         }
-        mInvalidatedKey = null;
         // Overlay a dark rectangle to dim the keyboard
         if (mMiniKeyboard != null) {
             paint.setColor((int) (mBackgroundDimAmount * 0xFF) << 24);
@@ -905,7 +978,6 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
         }
 
         mDrawPending = false;
-        mDirtyRect.setEmpty();
     }
 
     // TODO: clean up this method.
@@ -1020,7 +1092,6 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
      * @see #invalidateKey(Key)
      */
     public void invalidateAllKeys() {
-        mDirtyRect.union(0, 0, getWidth(), getHeight());
         mDrawPending = true;
         invalidate();
     }
@@ -1033,15 +1104,12 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
      * @see #invalidateAllKeys
      */
     public void invalidateKey(Key key) {
-        if (key == null)
-            return;
         mInvalidatedKey = key;
-        // TODO we should clean up this and record key's region to use in onBufferDraw.
-        mDirtyRect.union(key.x + getPaddingLeft(), key.y + getPaddingTop(),
-                key.x + key.width + getPaddingLeft(), key.y + key.height + getPaddingTop());
-        onBufferDraw();
-        invalidate(key.x + getPaddingLeft(), key.y + getPaddingTop(),
-                key.x + key.width + getPaddingLeft(), key.y + key.height + getPaddingTop());
+        if (key == null) {
+            postInvalidateDelayed(200);
+            return;
+        }
+        requestDraw();
     }
 
     private boolean openPopupIfRequired(int keyIndex, PointerTracker tracker) {

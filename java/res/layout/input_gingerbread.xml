@@ -26,7 +26,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingBottom="@dimen/keyboard_bottom_padding"
-        android:background="@drawable/keyboard_dark_background"
+        android:background="@drawable/keyboard_background"
         android:textStyle="bold"
 
         latin:keyBackground="@drawable/btn_keyboard_key_gingerbread"

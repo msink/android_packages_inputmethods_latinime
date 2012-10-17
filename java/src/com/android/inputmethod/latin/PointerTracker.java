@@ -232,11 +232,12 @@ public class PointerTracker {
                 // if new key index is not a key, old key was just released inside of the key.
                 final boolean inside = (keyIndex == NOT_A_KEY);
                 mKeys[oldKeyIndex].onReleased(inside);
-                mProxy.invalidateKey(mKeys[oldKeyIndex]);
             }
             if (isValidKeyIndex(keyIndex)) {
                 mKeys[keyIndex].onPressed();
                 mProxy.invalidateKey(mKeys[keyIndex]);
+            } else {
+                mProxy.invalidateKey(null);
             }
         }
     }
@@ -337,9 +338,6 @@ public class PointerTracker {
         if (!mIsRepeatableKey) {
             detectAndSendKey(keyIndex, x, y, eventTime);
         }
-
-        if (isValidKeyIndex(keyIndex))
-            mProxy.invalidateKey(mKeys[keyIndex]);
     }
 
     public void onCancelEvent(int x, int y, long eventTime) {
@@ -349,8 +347,6 @@ public class PointerTracker {
         mHandler.cancelPopupPreview();
         showKeyPreviewAndUpdateKey(NOT_A_KEY);
         int keyIndex = mKeyState.getKeyIndex();
-        if (isValidKeyIndex(keyIndex))
-           mProxy.invalidateKey(mKeys[keyIndex]);
     }
 
     public void repeatKey(int keyIndex) {
@@ -409,6 +405,7 @@ public class PointerTracker {
     }
 
     private void showKeyPreviewAndUpdateKey(int keyIndex) {
+        if (!isValidKeyIndex(keyIndex)) keyIndex = NOT_A_KEY;
         updateKey(keyIndex);
         // The modifier key, such as shift key, should not be shown as preview when multi-touch is
         // supported. On thge other hand, if multi-touch is not supported, the modifier key should

@@ -20,7 +20,7 @@
 
         <item name="keyBackground">@drawable/btn_keyboard_key</item>
         <item name="keyTextSize">@dimen/key_text_size</item>
-        <item name="keyTextColor">#FFFFFFFF</item>
+        <item name="keyTextColor">@drawable/key_text_color</item>
         <item name="keyPreviewLayout">@layout/key_preview</item>
         <item name="keyPreviewOffset">@dimen/key_preview_offset</item>
         <item name="keyPreviewHeight">@dimen/key_preview_height</item>
@@ -29,16 +29,16 @@
         <item name="keyHysteresisDistance">@dimen/key_hysteresis_distance</item>
         <item name="verticalCorrection">@dimen/keyboard_vertical_correction</item>
         <item name="shadowColor">#BB000000</item>
-        <item name="shadowRadius">2.75</item>
-        <item name="backgroundDimAmount">0.5</item>
-        <item name="symbolColorScheme">white</item>
+        <item name="shadowRadius">0</item>
+        <item name="backgroundDimAmount">0</item>
+        <item name="symbolColorScheme">black</item>
     </style>
     <style name="KeyPreviewAnimation">
-        <item name="android:windowEnterAnimation">@anim/key_preview_fadein</item>
-        <item name="android:windowExitAnimation">@anim/key_preview_fadeout</item>
+        <item name="android:windowEnterAnimation">@null</item>
+        <item name="android:windowExitAnimation">@null</item>
     </style>
     <style name="MiniKeyboardAnimation">
-        <item name="android:windowEnterAnimation">@anim/mini_keyboard_fadein</item>
-        <item name="android:windowExitAnimation">@anim/mini_keyboard_fadeout</item>
+        <item name="android:windowEnterAnimation">@null</item>
+        <item name="android:windowExitAnimation">@null</item>
     </style>
 </resources>
