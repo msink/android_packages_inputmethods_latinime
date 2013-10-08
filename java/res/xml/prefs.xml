@@ -19,25 +19,6 @@
         android:key="english_ime_settings">
 
     <CheckBoxPreference
-            android:key="vibrate_on"
-            android:title="@string/vibrate_on_keypress"
-            android:persistent="true"
-            />
-
-    <CheckBoxPreference
-            android:key="sound_on"
-            android:title="@string/sound_on_keypress"
-            android:persistent="true" 
-            />
-
-    <CheckBoxPreference
-            android:key="popup_on"
-            android:title="@string/popup_on_keypress"
-            android:persistent="true"
-            android:defaultValue="@bool/default_popup_preview"
-            />
-
-    <CheckBoxPreference
             android:key="recorrection_enabled"
             android:title="@string/prefs_enable_recorrection"
             android:summary="@string/prefs_enable_recorrection_summary"

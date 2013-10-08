@@ -198,9 +198,6 @@ public class LatinIME extends InputMethodService
     // TODO move this state variable outside LatinIME
     private boolean mCapsLock;
     private boolean mPasswordText;
-    private boolean mVibrateOn;
-    private boolean mSoundOn;
-    private boolean mPopupOn;
     private boolean mAutoCap;
     private boolean mQuickFixes;
     private boolean mHasUsedVoiceInput;
@@ -676,7 +673,6 @@ public class LatinIME extends InputMethodService
 
         updateCorrectionMode();
 
-        inputView.setPreviewEnabled(mPopupOn);
         inputView.setProximityCorrectionEnabled(true);
         mPredictionOn = mPredictionOn && (mCorrectionMode > 0 || mShowSuggestions);
         // If we just entered a text field, maybe it has some old text that requires correction
@@ -2382,29 +2378,9 @@ public class LatinIME extends InputMethodService
                 updateRingerMode();
             }
         }
-        if (mSoundOn && !mSilentMode) {
-            // FIXME: Volume and enable should come from UI settings
-            // FIXME: These should be triggered after auto-repeat logic
-            int sound = AudioManager.FX_KEYPRESS_STANDARD;
-            switch (primaryCode) {
-                case Keyboard.KEYCODE_DELETE:
-                    sound = AudioManager.FX_KEYPRESS_DELETE;
-                    break;
-                case KEYCODE_ENTER:
-                    sound = AudioManager.FX_KEYPRESS_RETURN;
-                    break;
-                case KEYCODE_SPACE:
-                    sound = AudioManager.FX_KEYPRESS_SPACEBAR;
-                    break;
-            }
-            mAudioManager.playSoundEffect(sound, FX_VOLUME);
-        }
     }
 
     private void vibrate() {
-        if (!mVibrateOn) {
-            return;
-        }
         if (mKeyboardSwitcher.getInputView() != null) {
             mKeyboardSwitcher.getInputView().performHapticFeedback(
                     HapticFeedbackConstants.KEYBOARD_TAP,
@@ -2443,7 +2419,7 @@ public class LatinIME extends InputMethodService
     }
 
     /* package */ boolean getPopupOn() {
-        return mPopupOn;
+        return false;
     }
 
     private void updateCorrectionMode() {
@@ -2486,10 +2462,6 @@ public class LatinIME extends InputMethodService
     private void loadSettings() {
         // Get the settings preferences
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        mVibrateOn = sp.getBoolean(PREF_VIBRATE_ON, false);
-        mSoundOn = sp.getBoolean(PREF_SOUND_ON, false);
-        mPopupOn = sp.getBoolean(PREF_POPUP_ON,
-                mResources.getBoolean(R.bool.default_popup_preview));
         mAutoCap = sp.getBoolean(PREF_AUTO_CAP, true);
         mQuickFixes = sp.getBoolean(PREF_QUICK_FIXES, true);
         mHasUsedVoiceInput = sp.getBoolean(PREF_HAS_USED_VOICE_INPUT, false);
@@ -2615,9 +2587,6 @@ public class LatinIME extends InputMethodService
         p.println("  mAutoSpace=" + mAutoSpace);
         p.println("  mCompletionOn=" + mCompletionOn);
         p.println("  TextEntryState.state=" + TextEntryState.getState());
-        p.println("  mSoundOn=" + mSoundOn);
-        p.println("  mVibrateOn=" + mVibrateOn);
-        p.println("  mPopupOn=" + mPopupOn);
     }
 
     // Characters per second measurement
