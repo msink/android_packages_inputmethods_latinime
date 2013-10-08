@@ -567,13 +567,13 @@ public class LatinKeyboard extends Keyboard {
 
             // Draw language text with shadow
             final int shadowColor = mRes.getColor(isBlack
-                    ? R.color.latinkeyboard_bar_language_shadow_black
-                    : R.color.latinkeyboard_bar_language_shadow_white);
+                    ? R.color.latinkeyboard_key_color_black
+                    : R.color.latinkeyboard_key_color_white);
             final float baseline = height * SPACEBAR_LANGUAGE_BASELINE;
             final float descent = paint.descent();
             paint.setColor(shadowColor);
             canvas.drawText(language, width / 2, baseline - descent - 1, paint);
-            paint.setColor(mRes.getColor(R.color.latinkeyboard_bar_language_text));
+            paint.setColor(mRes.getColor(R.color.latinkeyboard_key_color_black));
             canvas.drawText(language, width / 2, baseline - descent, paint);
 
             // Put arrows that are already layed out on either side of the text

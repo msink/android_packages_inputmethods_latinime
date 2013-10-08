@@ -155,10 +155,15 @@
         <Key
             android:codes="@integer/key_f1" />
         <Key
+            android:codes="@integer/key_f2"
+            android:keyIcon="@drawable/sym_keyboard_ru"
+            android:iconPreview="@drawable/sym_keyboard_feedback_ru"
+            android:keyWidth="15%p" />
+        <Key
             android:codes="@integer/key_space"
             android:keyIcon="@drawable/sym_bkeyboard_space"
             android:iconPreview="@drawable/sym_keyboard_feedback_space"
-            android:keyWidth="40%p" />
+            android:keyWidth="25%p" />
         <Key
             android:keyLabel="."
             android:keyIcon="@drawable/hint_popup"
@@ -182,10 +187,15 @@
         <Key
             android:codes="@integer/key_f1" />
         <Key
+            android:codes="@integer/key_f2"
+            android:keyIcon="@drawable/sym_keyboard_ru"
+            android:iconPreview="@drawable/sym_keyboard_feedback_ru"
+            android:keyWidth="15%p" />
+        <Key
             android:codes="@integer/key_space"
             android:keyIcon="@drawable/sym_bkeyboard_space"
             android:iconPreview="@drawable/sym_keyboard_feedback_space"
-            android:keyWidth="40%p" />
+            android:keyWidth="25%p" />
         <Key
             android:keyLabel="."
             android:keyIcon="@drawable/hint_popup"
@@ -209,10 +219,15 @@
         <Key
             android:codes="@integer/key_f1" />
         <Key
+            android:codes="@integer/key_f2"
+            android:keyIcon="@drawable/sym_keyboard_ru"
+            android:iconPreview="@drawable/sym_keyboard_feedback_ru"
+            android:keyWidth="15%p" />
+        <Key
             android:codes="@integer/key_space"
             android:keyIcon="@drawable/sym_bkeyboard_space"
             android:iconPreview="@drawable/sym_keyboard_feedback_space"
-            android:keyWidth="40%p" />
+            android:keyWidth="25%p" />
         <Key
             android:keyLabel="."
             android:keyIcon="@drawable/hint_popup"
@@ -236,10 +251,15 @@
         <Key
             android:codes="@integer/key_f1" />
         <Key
+            android:codes="@integer/key_f2"
+            android:keyIcon="@drawable/sym_keyboard_ru"
+            android:iconPreview="@drawable/sym_keyboard_feedback_ru"
+            android:keyWidth="20%p" />
+        <Key
             android:codes="@integer/key_space"
             android:keyIcon="@drawable/sym_bkeyboard_space"
             android:iconPreview="@drawable/sym_keyboard_feedback_space"
-            android:keyWidth="40%p" />
+            android:keyWidth="20%p" />
         <Key
             android:keyLabel="."
             android:keyIcon="@drawable/hint_popup"
@@ -259,10 +279,15 @@
         <Key
             android:codes="@integer/key_symbol"
             android:keyLabel="@string/label_symbol_key"
-            android:keyWidth="20%p"
+            android:keyWidth="16%p"
             android:keyEdgeFlags="left" />
         <Key
             android:codes="@integer/key_f1" />
+        <Key
+            android:codes="@integer/key_f2"
+            android:keyIcon="@drawable/sym_keyboard_ru"
+            android:iconPreview="@drawable/sym_keyboard_feedback_ru"
+            android:keyWidth="12%p" />
         <Key
             android:codes="@integer/key_space"
             android:keyIcon="@drawable/sym_bkeyboard_space"
@@ -272,7 +297,7 @@
             android:codes="@integer/key_tab"
             android:keyIcon="@drawable/sym_bkeyboard_tab"
             android:iconPreview="@drawable/sym_keyboard_feedback_tab"
-            android:keyWidth="20%p" />
+            android:keyWidth="16%p" />
         <Key
             android:keyLabel="."
             android:keyIcon="@drawable/hint_popup"
@@ -281,7 +306,7 @@
             android:codes="@integer/key_return"
             android:keyIcon="@drawable/sym_bkeyboard_return"
             android:iconPreview="@drawable/sym_keyboard_feedback_return"
-            android:keyWidth="20%p"
+            android:keyWidth="16%p"
             android:keyEdgeFlags="right" />
     </Row>
     <Row
@@ -291,7 +316,7 @@
         <Key
             android:codes="@integer/key_symbol"
             android:keyLabel="@string/label_symbol_key"
-            android:keyWidth="15%p"
+            android:keyWidth="18%p"
             android:keyEdgeFlags="left" />
         <Key
             android:codes="@integer/key_settings"
@@ -300,10 +325,15 @@
         <Key
             android:codes="@integer/key_f1" />
         <Key
+            android:codes="@integer/key_f2"
+            android:keyIcon="@drawable/sym_keyboard_ru"
+            android:iconPreview="@drawable/sym_keyboard_feedback_ru"
+            android:keyWidth="13%p" />
+        <Key
             android:codes="@integer/key_space"
             android:keyIcon="@drawable/sym_bkeyboard_space"
             android:iconPreview="@drawable/sym_keyboard_feedback_space"
-            android:keyWidth="30%p" />
+            android:keyWidth="22%p" />
         <Key
             android:keyLabel="."
             android:keyIcon="@drawable/hint_popup"
@@ -312,7 +342,7 @@
             android:codes="@integer/key_return"
             android:keyIcon="@drawable/sym_bkeyboard_return"
             android:iconPreview="@drawable/sym_keyboard_feedback_return"
-            android:keyWidth="25%p"
+            android:keyWidth="18%p"
             android:keyEdgeFlags="right" />
     </Row>
     <Row
@@ -331,10 +361,15 @@
         <Key
             android:codes="@integer/key_f1" />
         <Key
+            android:codes="@integer/key_f2"
+            android:keyIcon="@drawable/sym_keyboard_ru"
+            android:iconPreview="@drawable/sym_keyboard_feedback_ru"
+            android:keyWidth="12%p" />
+        <Key
             android:codes="@integer/key_space"
             android:keyIcon="@drawable/sym_bkeyboard_space"
             android:iconPreview="@drawable/sym_keyboard_feedback_space"
-            android:keyWidth="30%p" />
+            android:keyWidth="23%p" />
         <Key
             android:keyLabel="."
             android:keyIcon="@drawable/hint_popup"
@@ -343,7 +378,7 @@
             android:codes="@integer/key_return"
             android:keyIcon="@drawable/sym_bkeyboard_return"
             android:iconPreview="@drawable/sym_keyboard_feedback_return"
-            android:keyWidth="25%p"
+            android:keyWidth="20%p"
             android:keyEdgeFlags="right" />
     </Row>
     <Row
@@ -362,10 +397,15 @@
         <Key
             android:codes="@integer/key_f1" />
         <Key
+            android:codes="@integer/key_f2"
+            android:keyIcon="@drawable/sym_keyboard_ru"
+            android:iconPreview="@drawable/sym_keyboard_feedback_ru"
+            android:keyWidth="12%p" />
+        <Key
             android:codes="@integer/key_space"
             android:keyIcon="@drawable/sym_bkeyboard_space"
             android:iconPreview="@drawable/sym_keyboard_feedback_space"
-            android:keyWidth="30%p" />
+            android:keyWidth="23%p" />
         <Key
             android:keyLabel="."
             android:keyIcon="@drawable/hint_popup"
@@ -374,7 +414,7 @@
             android:codes="@integer/key_return"
             android:keyIcon="@drawable/sym_bkeyboard_return"
             android:iconPreview="@drawable/sym_keyboard_feedback_return"
-            android:keyWidth="25%p"
+            android:keyWidth="20%p"
             android:keyEdgeFlags="right" />
     </Row>
     <Row
@@ -393,10 +433,15 @@
         <Key
             android:codes="@integer/key_f1" />
         <Key
+            android:codes="@integer/key_f2"
+            android:keyIcon="@drawable/sym_keyboard_ru"
+            android:iconPreview="@drawable/sym_keyboard_feedback_ru"
+            android:keyWidth="12%p" />
+        <Key
             android:codes="@integer/key_space"
             android:keyIcon="@drawable/sym_bkeyboard_space"
             android:iconPreview="@drawable/sym_keyboard_feedback_space"
-            android:keyWidth="30%p" />
+            android:keyWidth="23%p" />
         <Key
             android:keyLabel="."
             android:keyIcon="@drawable/hint_popup"
@@ -406,7 +451,7 @@
             android:keyOutputText=":-) "
             android:keyIcon="@drawable/hint_popup"
             android:popupKeyboard="@xml/popup_smileys"
-            android:keyWidth="25%p"
+            android:keyWidth="20%p"
             android:keyEdgeFlags="right" />
     </Row>
     <Row
@@ -425,10 +470,15 @@
         <Key
             android:codes="@integer/key_f1" />
         <Key
+            android:codes="@integer/key_f2"
+            android:keyIcon="@drawable/sym_keyboard_ru"
+            android:iconPreview="@drawable/sym_keyboard_feedback_ru"
+            android:keyWidth="14%p" />
+        <Key
             android:codes="@integer/key_space"
             android:keyIcon="@drawable/sym_bkeyboard_space"
             android:iconPreview="@drawable/sym_keyboard_feedback_space"
-            android:keyWidth="30%p" />
+            android:keyWidth="21%p" />
         <Key
             android:codes="@integer/key_tab"
             android:keyIcon="@drawable/sym_bkeyboard_tab"

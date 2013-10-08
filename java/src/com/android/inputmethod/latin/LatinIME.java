@@ -254,6 +254,8 @@ public class LatinIME extends InputMethodService
 
     private ArrayList<WordAlternatives> mWordHistory = new ArrayList<WordAlternatives>();
 
+    private boolean isInputLanguageRU = false;
+
     private class VoiceResults {
         List<String> candidates;
         Map<String, List<CharSequence>> alternatives;
@@ -1232,6 +1234,26 @@ public class LatinIME extends InputMethodService
                 break;
             case 9 /*Tab*/:
                 sendDownUpKeyEvents(KeyEvent.KEYCODE_TAB);
+                break;
+            case 8:
+                SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+                SharedPreferences.Editor ed = sp.edit();
+                String lastinputlanguage = sp.getString(PREF_SELECTED_LANGUAGES, "ru_RU");
+                System.out.println("shy 0319 lastinputlanguage---->" + lastinputlanguage);
+                if (lastinputlanguage.equals("ru_RU")) {
+                    isInputLanguageRU = false;
+                    lastinputlanguage = "en_GB";
+                } else {
+                    isInputLanguageRU = true;
+                    lastinputlanguage = "ru_RU";
+                }
+                ed.putString(PREF_SELECTED_LANGUAGES, lastinputlanguage);
+                SharedPreferencesCompat.apply(ed);
+                mRefreshKeyboardRequired = true;
+                if (mRefreshKeyboardRequired) {
+                    mRefreshKeyboardRequired = false;
+                    toggleLanguage(true, true);
+                }
                 break;
             default:
                 if (primaryCode != KEYCODE_ENTER) {
