@@ -15,77 +15,85 @@
 -->
 
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:settings="http://schemas.android.com/apk/res/com.android.inputmethod.latin"
         android:title="@string/english_ime_settings"
         android:key="english_ime_settings">
 
-    <CheckBoxPreference
+    <com.android.inputmethod.latin.MyCheckBoxPreference
             android:key="recorrection_enabled"
             android:title="@string/prefs_enable_recorrection"
             android:summary="@string/prefs_enable_recorrection_summary"
             android:persistent="true"
             android:defaultValue="@bool/default_recorrection_enabled"
+            settings:checkbg="@drawable/settings_bg_top"
             />
 
-    <CheckBoxPreference
+    <com.android.inputmethod.latin.MyCheckBoxPreference
             android:key="auto_cap"
             android:title="@string/auto_cap"
             android:persistent="true"
             android:defaultValue="true"
+            settings:checkbg="@drawable/settings_bg_mid"
             />
 
-    <ListPreference
+    <com.android.inputmethod.latin.MyListPreference
             android:key="settings_key"
             android:title="@string/prefs_settings_key"
             android:persistent="true"
             android:entryValues="@array/settings_key_modes_values"
             android:entries="@array/settings_key_modes"
             android:defaultValue="@string/settings_key_mode_auto"
+            settings:bg="@drawable/settings_bg_mid"
             />
 
-    <ListPreference
+    <com.android.inputmethod.latin.MyListPreference
             android:key="voice_mode"
             android:title="@string/voice_input"
             android:persistent="true"
             android:entryValues="@array/voice_input_modes_values"
             android:entries="@array/voice_input_modes"
             android:defaultValue="@string/voice_mode_main"
+            settings:bg="@drawable/settings_bg_mid"
             />
 
-
-    <PreferenceScreen
+    <com.android.inputmethod.latin.MyIconPreferenceScreen
             android:title="@string/language_selection_title"
-            android:summary="@string/language_selection_summary">
+            android:summary="@string/language_selection_summary"
+            settings:iconbg="@drawable/settings_bg_mid">
         <intent
                 android:action="com.android.inputmethod.latin.INPUT_LANGUAGE_SELECTION"/>
-    </PreferenceScreen>
+    </com.android.inputmethod.latin.MyIconPreferenceScreen>
 
     <PreferenceCategory
             android:title="@string/prediction_category"
             android:key="prediction_settings">
 
-        <CheckBoxPreference
+        <com.android.inputmethod.latin.MyCheckBoxPreference
             android:key="quick_fixes"
             android:title="@string/quick_fixes"
             android:summary="@string/quick_fixes_summary"
             android:persistent="true"
             android:defaultValue="true"
+            settings:checkbg="@drawable/settings_bg_mid"
             />
 
-        <CheckBoxPreference
+        <com.android.inputmethod.latin.MyCheckBoxPreference
             android:key="show_suggestions"
             android:title="@string/show_suggestions"
             android:summary="@string/show_suggestions_summary"
             android:persistent="true"
             android:defaultValue="true"
+            settings:checkbg="@drawable/settings_bg_mid"
             />
 
-        <CheckBoxPreference
+        <com.android.inputmethod.latin.MyCheckBoxPreference
             android:key="auto_complete"
             android:title="@string/auto_complete"
             android:summary="@string/auto_complete_summary"
             android:persistent="true" 
             android:defaultValue="@bool/enable_autocorrect"
             android:dependency="show_suggestions"
+            settings:checkbg="@drawable/settings_bg_bottom"
             />
     </PreferenceCategory>            
 

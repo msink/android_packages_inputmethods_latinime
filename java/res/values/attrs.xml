@@ -16,6 +16,21 @@
 
 <resources>
 
+    <declare-styleable name="myCheckBoxPreference">
+        <attr name="checkbg" format="reference" />
+    </declare-styleable>
+
+    <declare-styleable name="MyIconPreferenceScreen">
+        <attr name="settingicon" format="reference" />
+        <attr name="iconbg" format="reference" />
+        <attr name="width" format="dimension" />
+        <attr name="height" format="dimension" />
+    </declare-styleable>
+
+    <declare-styleable name="MyListPreference">
+        <attr name="bg" format="reference" />
+    </declare-styleable>
+
     <declare-styleable name="LatinKeyboardBaseView">
         <!-- Default KeyboardView style. -->
         <attr name="keyboardViewStyle" format="reference" />
