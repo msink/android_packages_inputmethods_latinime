@@ -30,5 +30,6 @@
         android:textStyle="bold"
 
         latin:keyBackground="@drawable/btn_keyboard_key_gingerbread"
+        latin:keyTextSize="@dimen/keyboard_key_text_size"
         latin:keyTextStyle="bold"
         />

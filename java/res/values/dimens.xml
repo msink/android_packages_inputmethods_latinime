@@ -20,12 +20,12 @@
 
 <resources>
     <!-- key_height + key_bottom_gap = popup_key_height -->
-    <dimen name="key_height">0.400in</dimen>
-    <dimen name="key_bottom_gap">0.035in</dimen>
+    <dimen name="key_height">0.450in</dimen>
+    <dimen name="key_bottom_gap">0.050in</dimen>
     <dimen name="popup_key_height">0.450in</dimen>
-    <dimen name="keyboard_bottom_padding">0.06in</dimen>
+    <dimen name="keyboard_bottom_padding">0.05in</dimen>
     <dimen name="bubble_pointer_offset">22dip</dimen>
-    <dimen name="candidate_strip_height">42dip</dimen>
+    <dimen name="candidate_strip_height">54dip</dimen>
     <dimen name="candidate_strip_fading_edge_length">63dip</dimen>
     <dimen name="spacebar_vertical_correction">4dip</dimen>
     <!-- If the screen height in landscape is larger than the below value, then the keyboard
@@ -46,5 +46,7 @@
     <!-- We use "inch", not "dip" because this value tries dealing with physical distance related
          to user's finger. -->
     <dimen name="keyboard_vertical_correction">-0.05in</dimen>
-    <dimen name="candidate_min_touchable_width">0.3in</dimen>
+    <dimen name="candidate_min_touchable_width">0.4in</dimen>
+    <dimen name="keyboard_key_text_size">26sp</dimen>
+    <dimen name="candidate_preview_text_size">28sp</dimen>
 </resources>

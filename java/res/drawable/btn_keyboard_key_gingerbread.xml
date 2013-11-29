@@ -18,25 +18,66 @@
 
     <!-- Functional keys. -->
 
-    <item android:state_single="true" android:state_pressed="true"
-          android:drawable="@drawable/btn_keyboard_key_dark_pressed" />
-    <item android:state_single="true"
-          android:drawable="@drawable/btn_keyboard_key_dark_normal" />
+    <item android:state_single="true" android:state_pressed="true">
+        <shape>
+            <gradient android:startColor="#000" android:endColor="#000" />
+            <stroke android:width="3dip" android:color="#fff" />
+            <corners android:radius="5dip" />
+        </shape>
+    </item>
+    <item android:state_single="true">
+        <shape>
+            <gradient android:startColor="#fff" android:endColor="#fff" />
+            <stroke android:width="3dip" android:color="#000" />
+            <corners android:radius="5dip" />
+        </shape>
+    </item>
 
     <!-- Toggle keys. Use checkable/checked state. -->
 
-    <item android:state_checkable="true" android:state_checked="true" android:state_pressed="true"
-          android:drawable="@drawable/btn_keyboard_key_dark_pressed_on" />
-    <item android:state_checkable="true" android:state_pressed="true"
-          android:drawable="@drawable/btn_keyboard_key_dark_pressed_off" />
-    <item android:state_checkable="true" android:state_checked="true"
-          android:drawable="@drawable/btn_keyboard_key_dark_normal_on" />
-    <item android:state_checkable="true"
-          android:drawable="@drawable/btn_keyboard_key_dark_normal_off" />
+    <item android:state_checkable="true" android:state_checked="true" android:state_pressed="true">
+        <shape>
+            <gradient android:startColor="#000" android:endColor="#000" />
+            <stroke android:width="3dip" android:color="#fff" />
+            <corners android:radius="5dip" />
+        </shape>
+    </item>
+    <item android:state_checkable="true" android:state_pressed="true">
+        <shape>
+            <gradient android:startColor="#000" android:endColor="#000" />
+            <stroke android:width="3dip" android:color="#fff" />
+            <corners android:radius="5dip" />
+        </shape>
+    </item>
+    <item android:state_checkable="true" android:state_checked="true">
+        <shape>
+            <gradient android:startColor="#fff" android:endColor="#fff" />
+            <stroke android:width="3dip" android:color="#000" />
+            <corners android:radius="5dip" />
+        </shape>
+    </item>
+    <item android:state_checkable="true">
+        <shape>
+            <gradient android:startColor="#fff" android:endColor="#fff" />
+            <stroke android:width="3dip" android:color="#000" />
+            <corners android:radius="5dip" />
+        </shape>
+    </item>
 
-    <!-- Normal keys -->
+   <!-- Normal keys -->
 
-    <item android:state_pressed="true"
-          android:drawable="@drawable/btn_keyboard_key_light_pressed" />
-    <item android:drawable="@drawable/btn_keyboard_key_light_normal" />
+    <item android:state_pressed="true">
+        <shape>
+            <gradient android:startColor="#000" android:endColor="#000" />
+            <stroke android:width="3dip" android:color="#fff" />
+            <corners android:radius="5dip" />
+        </shape>
+    </item>
+    <item>
+        <shape>
+            <gradient android:startColor="#fff" android:endColor="#fff" />
+            <stroke android:width="3dip" android:color="#000" />
+            <corners android:radius="5dip" />
+        </shape>
+    </item>
 </selector>
