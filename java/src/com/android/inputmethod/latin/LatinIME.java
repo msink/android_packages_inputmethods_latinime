@@ -258,6 +258,8 @@ public class LatinIME extends InputMethodService
         Map<String, List<CharSequence>> alternatives;
     }
 
+    private boolean isdone = false;
+
     public abstract static class WordAlternatives {
         protected CharSequence mChosenWord;
 
@@ -949,6 +951,7 @@ public class LatinIME extends InputMethodService
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.d(TAG, "onKeyDown: " + keyCode);
         switch (keyCode) {
             case KeyEvent.KEYCODE_BACK:
                 if (event.getRepeatCount() == 0 && mKeyboardSwitcher.getInputView() != null) {
@@ -964,9 +967,19 @@ public class LatinIME extends InputMethodService
             case KeyEvent.KEYCODE_DPAD_UP:
             case KeyEvent.KEYCODE_DPAD_LEFT:
             case KeyEvent.KEYCODE_DPAD_RIGHT:
+            case KeyEvent.KEYCODE_DPAD_CENTER:
+            case KeyEvent.KEYCODE_ENTER:
                 // If tutorial is visible, don't allow dpad to work
                 if (mTutorial != null) {
                     return true;
+                }
+                LatinKeyboardView inputView = mKeyboardSwitcher.getInputView();
+                // Enable shift key and DPAD to do selections
+                if (inputView != null && inputView.isShown()) {
+                    isdone = true;
+                    return mKeyboardSwitcher.getInputView().onKeyDown(keyCode, event);
+                } else {
+                    isdone = false;
                 }
                 break;
         }
@@ -975,25 +988,24 @@ public class LatinIME extends InputMethodService
 
     @Override
     public boolean onKeyUp(int keyCode, KeyEvent event) {
+        Log.d(TAG, "onKeyUp: " + keyCode);
         switch (keyCode) {
             case KeyEvent.KEYCODE_DPAD_DOWN:
             case KeyEvent.KEYCODE_DPAD_UP:
             case KeyEvent.KEYCODE_DPAD_LEFT:
             case KeyEvent.KEYCODE_DPAD_RIGHT:
+            case KeyEvent.KEYCODE_DPAD_CENTER:
+            case KeyEvent.KEYCODE_ENTER:
                 // If tutorial is visible, don't allow dpad to work
                 if (mTutorial != null) {
                     return true;
                 }
                 LatinKeyboardView inputView = mKeyboardSwitcher.getInputView();
                 // Enable shift key and DPAD to do selections
-                if (inputView != null && inputView.isShown()
-                        && inputView.isShifted()) {
-                    event = new KeyEvent(event.getDownTime(), event.getEventTime(),
-                            event.getAction(), event.getKeyCode(), event.getRepeatCount(),
-                            event.getDeviceId(), event.getScanCode(),
-                            KeyEvent.META_SHIFT_LEFT_ON | KeyEvent.META_SHIFT_ON);
-                    InputConnection ic = getCurrentInputConnection();
-                    if (ic != null) ic.sendKeyEvent(event);
+                if (inputView != null && inputView.isShown()) {
+                    return inputView.onKeyUp(keyCode, event);
+                } else if (isdone) {
+                    isdone = false;
                     return true;
                 }
                 break;
@@ -2290,6 +2302,7 @@ public class LatinIME extends InputMethodService
             mShiftKeyState.onOtherKeyPressed();
             mSymbolKeyState.onOtherKeyPressed();
         }
+        Log.e("onPress", "primaryCode : " + primaryCode);
     }
 
     public void onRelease(int primaryCode) {
@@ -2306,6 +2319,7 @@ public class LatinIME extends InputMethodService
                 changeKeyboardMode();
             mSymbolKeyState.onRelease();
         }
+        Log.e("onRelease", "primaryCode : " + primaryCode);
     }
 
     private FieldContext makeFieldContext() {

@@ -23,12 +23,15 @@ import android.content.res.Resources;
 import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Paint.Align;
+import android.graphics.PixelXorXfermode;
 import android.graphics.PorterDuff;
 import android.graphics.Rect;
 import android.graphics.Region.Op;
 import android.graphics.Typeface;
+import android.graphics.Xfermode;
 import android.graphics.drawable.Drawable;
 import android.inputmethodservice.Keyboard;
 import android.inputmethodservice.Keyboard.Key;
@@ -41,6 +44,7 @@ import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -186,6 +190,9 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
     private Key[] mKeys;
     // TODO this attribute should be gotten from Keyboard.
     private int mKeyboardVerticalGap;
+    private boolean mInDPadNavigation = false;
+    private KeyboardNavigator mKeyboardNavigator = null;
+    PixelXorXfermode mTextHighlightXorXfermode = new PixelXorXfermode(Color.WHITE);
 
     // Key preview popup
     private TextView mPreviewText;
@@ -399,6 +406,7 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
     public LatinKeyboardBaseView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
+        mInDPadNavigation = true;
         TypedArray a = context.obtainStyledAttributes(
                 attrs, R.styleable.LatinKeyboardBaseView, defStyle, R.style.LatinKeyboardBaseView);
         LayoutInflater inflate =
@@ -601,6 +609,7 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
         invalidateAllKeys();
         computeProximityThreshold(keyboard);
         mMiniKeyboardCache.clear();
+        mKeyboardNavigator = new KeyboardNavigator(keyboard);
     }
 
     /**
@@ -751,6 +760,7 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
 
     @Override
     public void onDraw(Canvas canvas) {
+        Log.d(TAG, "onDraw");
         super.onDraw(canvas);
         if (mDrawPending || mBuffer == null || mKeyboardChanged) {
             onBufferDraw();
@@ -759,16 +769,97 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
         drawKey(canvas);
     }
 
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        Log.d(TAG, "onKeyDown: " + keyCode);
+        if (!isShown()) return false;
+
+        if (keyCode == KeyEvent.KEYCODE_DPAD_UP ||
+            keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
+            keyCode == KeyEvent.KEYCODE_DPAD_LEFT ||
+            keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+            Log.d(TAG, "in DPAD navigation");
+            mInDPadNavigation = true;
+            if (keyCode == KeyEvent.KEYCODE_DPAD_UP) {
+                Key k = mKeyboardNavigator.searchUp(mKeyboardNavigator.getCurrentKey());
+                if (k == null) {
+                    k = mKeyboardNavigator.searchDownFarMost(mKeyboardNavigator.getCurrentKey());
+                }
+                if (k != null) {
+                    mKeyboardNavigator.setCurrentKey(k);
+                }
+            } else if (keyCode == KeyEvent.KEYCODE_DPAD_DOWN) {
+                Key k = mKeyboardNavigator.searchDown(mKeyboardNavigator.getCurrentKey());
+                if (k == null) {
+                    k = mKeyboardNavigator.searchUpFarMost(mKeyboardNavigator.getCurrentKey());
+                }
+                if (k != null) {
+                    mKeyboardNavigator.setCurrentKey(k);
+                }
+            } else if (keyCode == KeyEvent.KEYCODE_DPAD_LEFT) {
+                Key k = mKeyboardNavigator.searchLeft(mKeyboardNavigator.getCurrentKey());
+                if (k == null) {
+                    k = mKeyboardNavigator.searchRightFarMost(mKeyboardNavigator.getCurrentKey());
+                }
+                if (k != null) {
+                    mKeyboardNavigator.setCurrentKey(k);
+                }
+            } else if (keyCode == KeyEvent.KEYCODE_DPAD_RIGHT) {
+                Key k = mKeyboardNavigator.searchRight(mKeyboardNavigator.getCurrentKey());
+                if (k == null) {
+                    k = mKeyboardNavigator.searchLeftFarMost(mKeyboardNavigator.getCurrentKey());
+                }
+                if (k != null) {
+                    mKeyboardNavigator.setCurrentKey(k);
+                }
+            } else {
+                assert(false);
+            }
+            invalidateKey(mKeyboardNavigator.getCurrentKey());
+            return true;
+        }
+
+        if (keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+            keyCode == KeyEvent.KEYCODE_ENTER) {
+            Key k = mKeyboardNavigator.getCurrentKey();
+            PointerTracker tracker = getPointerTracker(0);
+            tracker.onTouchEvent(0, k.x + k.width / 2, k.y + k.height / 2, 1700000);
+            tracker.onTouchEvent(1, k.x + k.width / 2, k.y + k.height / 2, 1700000);
+            return true;
+        }
+
+        return super.onKeyDown(keyCode, event);
+    }
+
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        Log.d(TAG, "onKeyUp: " + keyCode);
+        if (!isShown()) return false;
+
+        if (keyCode == KeyEvent.KEYCODE_DPAD_UP ||
+            keyCode == KeyEvent.KEYCODE_DPAD_DOWN ||
+            keyCode == KeyEvent.KEYCODE_DPAD_LEFT ||
+            keyCode == KeyEvent.KEYCODE_DPAD_RIGHT ||
+            keyCode == KeyEvent.KEYCODE_DPAD_CENTER ||
+            keyCode == KeyEvent.KEYCODE_ENTER) {
+            Log.d(TAG, "in DPAD navigation");
+            mInDPadNavigation = true;
+            return true;
+        }
+
+        return super.onKeyUp(keyCode, event);
+    }
+
     private void drawKey(Canvas canvas) {
+        Log.d(TAG, "drawKey");
         if (mKeyboard == null) return;
-        if (mInvalidatedKey == null) return;
+        if (!mInDPadNavigation && mInvalidatedKey == null) return;
 
         final Paint paint = mPaint;
         final Drawable keyBackground = mKeyBackground;
         final Rect padding = mPadding;
         final int kbdPaddingLeft = getPaddingLeft();
         final int kbdPaddingTop = getPaddingTop();
-        final Key key = mInvalidatedKey;
+        final Key key = mInDPadNavigation ? mKeyboardNavigator.getCurrentKey() : mInvalidatedKey;
+        Log.d(TAG, "key to draw: " + key.label);
 
         int[] drawableState = key.getCurrentDrawableState();
         keyBackground.setState(drawableState);
@@ -783,7 +874,7 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
             keyBackground.setBounds(0, 0, key.width, key.height);
         }
         canvas.translate(key.x + kbdPaddingLeft, key.y + kbdPaddingTop);
-        keyBackground.draw(canvas);
+        canvas.drawRect(bounds, paint);
 
         boolean shouldDrawIcon = true;
         if (label != null) {
@@ -815,7 +906,10 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
             final int centerY = (key.height + padding.top - padding.bottom) / 2;
             final float baseline = centerY
                     + labelHeight * KEY_LABEL_VERTICAL_ADJUSTMENT_FACTOR;
+            Xfermode bak = mPaint.getXfermode();
+            paint.setXfermode(mTextHighlightXorXfermode);
             canvas.drawText(label, centerX, baseline, paint);
+            paint.setXfermode(bak);
             // Turn off drop shadow
             paint.setShadowLayer(0, 0, 0, 0);
 
@@ -1362,6 +1456,7 @@ public class LatinKeyboardBaseView extends View implements PointerTracker.UIProx
 
     @Override
     public boolean onTouchEvent(MotionEvent me) {
+        mInDPadNavigation = false;
         final int pointerCount = me.getPointerCount();
         final int action = me.getActionMasked();
 
