@@ -124,8 +124,8 @@ public class KeyboardSwitcher implements SharedPreferences.OnSharedPreferenceCha
     private static final int SETTINGS_KEY_MODE_ALWAYS_SHOW = R.string.settings_key_mode_always_show;
     // NOTE: No need to have SETTINGS_KEY_MODE_ALWAYS_HIDE here because it's not being referred to
     // in the source code now.
-    // Default is SETTINGS_KEY_MODE_AUTO.
-    private static final int DEFAULT_SETTINGS_KEY_MODE = SETTINGS_KEY_MODE_AUTO;
+    // Default is SETTINGS_KEY_MODE_ALWAYS_SHOW.
+    private static final int DEFAULT_SETTINGS_KEY_MODE = SETTINGS_KEY_MODE_ALWAYS_SHOW;
 
     private int mLastDisplayWidth;
     private LanguageSwitcher mLanguageSwitcher;

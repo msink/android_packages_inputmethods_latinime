@@ -57,7 +57,9 @@ public class LanguageSwitcher {
      * @return whether there was any change
      */
     public boolean loadLocales(SharedPreferences sp) {
-        String selectedLanguages = sp.getString(LatinIME.PREF_SELECTED_LANGUAGES, null);
+        loadDefaults();
+        String defaultSelectedLanguages = mDefaultInputLanguage + ",en_US,";
+        String selectedLanguages = sp.getString(LatinIME.PREF_SELECTED_LANGUAGES, defaultSelectedLanguages);
         String currentLanguage   = sp.getString(LatinIME.PREF_INPUT_LANGUAGE, null);
         if (selectedLanguages == null || selectedLanguages.length() < 1) {
             loadDefaults();

@@ -19,18 +19,6 @@
         android:key="english_ime_settings">
 
     <CheckBoxPreference
-            android:key="vibrate_on"
-            android:title="@string/vibrate_on_keypress"
-            android:persistent="true"
-            />
-
-    <CheckBoxPreference
-            android:key="sound_on"
-            android:title="@string/sound_on_keypress"
-            android:persistent="true" 
-            />
-
-    <CheckBoxPreference
             android:key="popup_on"
             android:title="@string/popup_on_keypress"
             android:persistent="true"
@@ -58,7 +46,7 @@
             android:persistent="true"
             android:entryValues="@array/settings_key_modes_values"
             android:entries="@array/settings_key_modes"
-            android:defaultValue="@string/settings_key_mode_auto"
+            android:defaultValue="@string/settings_key_mode_always_show"
             />
 
     <ListPreference

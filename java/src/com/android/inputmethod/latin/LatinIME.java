@@ -89,8 +89,6 @@ public class LatinIME extends InputMethodService
     static final boolean VOICE_INSTALLED = true;
     static final boolean ENABLE_VOICE_BUTTON = true;
 
-    private static final String PREF_VIBRATE_ON = "vibrate_on";
-    private static final String PREF_SOUND_ON = "sound_on";
     private static final String PREF_POPUP_ON = "popup_on";
     private static final String PREF_AUTO_CAP = "auto_cap";
     private static final String PREF_QUICK_FIXES = "quick_fixes";
@@ -147,8 +145,9 @@ public class LatinIME extends InputMethodService
     static final int KEYCODE_PERIOD = '.';
 
     // Contextual menu positions
-    private static final int POS_METHOD = 0;
+    private static final int POS_LANGUAGE = 0;
     private static final int POS_SETTINGS = 1;
+    private static final int POS_METHOD = 2;
 
     //private LatinKeyboardView mInputView;
     private LinearLayout mCandidateViewContainer;
@@ -1160,11 +1159,7 @@ public class LatinIME extends InputMethodService
 
     private void onOptionKeyPressed() {
         if (!isShowingOptionDialog()) {
-            if (LatinIMEUtil.hasMultipleEnabledIMEs(this)) {
                 showOptionsMenu();
-            } else {
-                launchSettings();
-            }
         }
     }
 
@@ -2464,8 +2459,8 @@ public class LatinIME extends InputMethodService
     private void loadSettings() {
         // Get the settings preferences
         SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-        mVibrateOn = sp.getBoolean(PREF_VIBRATE_ON, false);
-        mSoundOn = sp.getBoolean(PREF_SOUND_ON, false);
+        mVibrateOn = false;
+        mSoundOn = false;
         mPopupOn = sp.getBoolean(PREF_POPUP_ON,
                 mResources.getBoolean(R.bool.default_popup_preview));
         mAutoCap = sp.getBoolean(PREF_AUTO_CAP, true);
@@ -2533,8 +2528,12 @@ public class LatinIME extends InputMethodService
         builder.setNegativeButton(android.R.string.cancel, null);
         CharSequence itemSettings = getString(R.string.english_ime_settings);
         CharSequence itemInputMethod = getString(R.string.selectInputMethod);
+        CharSequence itemLanguage = mResources.getConfiguration().locale.getDisplayName();
+        if (!mInputLocale.equals("en_US")) {
+            itemLanguage = new Locale("en", "US").getDisplayName();
+        }
         builder.setItems(new CharSequence[] {
-                itemInputMethod, itemSettings},
+                itemLanguage, itemSettings, itemInputMethod},
                 new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface di, int position) {
@@ -2546,6 +2545,9 @@ public class LatinIME extends InputMethodService
                     case POS_METHOD:
                         ((InputMethodManager) getSystemService(INPUT_METHOD_SERVICE))
                             .showInputMethodPicker();
+                        break;
+                    case POS_LANGUAGE:
+                        toggleLanguage(false, true);
                         break;
                 }
             }
