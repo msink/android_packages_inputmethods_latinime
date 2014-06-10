@@ -41,4 +41,16 @@
         <item name="android:windowEnterAnimation">@null</item>
         <item name="android:windowExitAnimation">@null</item>
     </style>
+    <style name="TextAppearance.Large.Custom" parent="android:TextAppearance.Large">
+        <item name="android:textSize">@dimen/text_tile_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    <style name="TextAppearance.Small.Custom" parent="android:TextAppearance.Small">
+        <item name="android:textSize">@dimen/text_summary_size</item>
+        <item name="android:textStyle">normal</item>
+    </style>
+    <style name="CustomTheme" parent="android:Theme">
+        <item name="android:textAppearanceLarge">@style/TextAppearance.Large.Custom</item>
+        <item name="android:textAppearanceSmall">@style/TextAppearance.Small.Custom</item>
+    </style>
 </resources>

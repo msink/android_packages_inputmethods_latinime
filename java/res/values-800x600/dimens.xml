@@ -21,4 +21,6 @@
     <dimen name="candidate_min_touchable_width">0.311in</dimen>
     <dimen name="keyboard_key_text_size">20sp</dimen>
     <dimen name="candidate_preview_text_size">20sp</dimen>
+    <dimen name="text_tile_size">21sp</dimen>
+    <dimen name="text_summary_size">15sp</dimen>
 </resources>
