@@ -185,29 +185,29 @@ public class KeyboardNavigator {
         if (size <= 1) {
             return row.getKeys().get(0);
         }
-        Key first = row.getKeys().get(0);
-        if (key.x <= first.x) {
+        if (key.x <= row.getKeys().get(0).x) {
             return row.getKeys().get(0);
         }
-        Key last = row.getKeys().get(size - 1);
-        if (key.x > last.x) {
+        if (key.x >= row.getKeys().get(size - 1).x) {
             return row.getKeys().get(size - 1);
         }
         int key_right = key.x + key.width;
         for (int i = 0; i < size - 1; i++) {
-            Key left = row.getKeys().get(i);
-            Key right = row.getKeys().get(i + 1);
-            int x = left.x + left.width;
-            if (x < key.x) {
+            Key current = row.getKeys().get(i);
+            Key next = row.getKeys().get(i + 1);
+            int current_right = current.x + current.width;
+            if (current_right < key.x) {
                 continue;
             }
-            if (key_right < right.x) {
-                return left;
-            } else if (x - key.x >= key_right - right.x) {
-                return left;
-            } else {
-                return right;
+            if (key_right < next.x) {
+                return current;
             }
+            int overlap_left = current_right - key.x;
+            int overlap_right = key_right - next.x;
+            if (overlap_left >= overlap_right) {
+                return current;
+            }
+            return next;
         }
         return row.getKeys().get(size - 1);
     }
