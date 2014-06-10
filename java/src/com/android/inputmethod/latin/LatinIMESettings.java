@@ -32,6 +32,7 @@ import android.preference.PreferenceGroup;
 import android.speech.SpeechRecognizer;
 import android.text.AutoText;
 import android.util.Log;
+import android.hardware.DeviceController;
 
 import com.android.inputmethod.voice.SettingsUtil;
 import com.android.inputmethod.voice.VoiceInputLogger;
@@ -43,6 +44,8 @@ public class LatinIMESettings extends PreferenceActivity
     private static final String QUICK_FIXES_KEY = "quick_fixes";
     private static final String PREDICTION_SETTINGS_KEY = "prediction_settings";
     private static final String VOICE_SETTINGS_KEY = "voice_mode";
+    private static final String POPUP_ON_KEY = "popup_on";
+    private static final String RECORRECTION_KEY = "recorrection_enabled";
     /* package */ static final String PREF_SETTINGS_KEY = "settings_key";
 
     private static final String TAG = "LatinIMESettings";
@@ -53,6 +56,8 @@ public class LatinIMESettings extends PreferenceActivity
     private CheckBoxPreference mQuickFixes;
     private ListPreference mVoicePreference;
     private ListPreference mSettingsKeyPreference;
+    private CheckBoxPreference mPopupOnKeypress;
+    private CheckBoxPreference mRecorrectionEnabled;
     private boolean mVoiceOn;
 
     private VoiceInputLogger mLogger;
@@ -73,11 +78,19 @@ public class LatinIMESettings extends PreferenceActivity
         mVoiceModeOff = getString(R.string.voice_mode_off);
         mVoiceOn = !(prefs.getString(VOICE_SETTINGS_KEY, mVoiceModeOff).equals(mVoiceModeOff));
         mLogger = VoiceInputLogger.getLogger(this);
+
+        mPopupOnKeypress = (CheckBoxPreference)findPreference(POPUP_ON_KEY);
+        mRecorrectionEnabled = (CheckBoxPreference)findPreference(RECORRECTION_KEY);
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        DeviceController device  = new DeviceController(this);
+        if (!device.isTouchable()) {
+            getPreferenceScreen().removePreference(mPopupOnKeypress);
+            getPreferenceScreen().removePreference(mRecorrectionEnabled);
+        }
         int autoTextSize = AutoText.getSize(getListView());
         if (autoTextSize < 1) {
             ((PreferenceGroup) findPreference(PREDICTION_SETTINGS_KEY))
