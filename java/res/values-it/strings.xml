@@ -52,15 +52,30 @@
     <string name="settings_key_mode_auto_name" msgid="2993460277873684680">"Automatico"</string>
     <string name="settings_key_mode_always_show_name" msgid="3047567041784760575">"Mostra sempre"</string>
     <string name="settings_key_mode_always_hide_name" msgid="7833948046716923994">"Nascondi sempre"</string>
-    <!-- no translation found for settings_key_modes:0 (8549888726962891527) -->
-    <!-- no translation found for settings_key_modes:1 (881280041213210923) -->
-    <!-- no translation found for settings_key_modes:2 (7317310620171067848) -->
+  <string-array name="settings_key_modes">
+    <item>@string/settings_key_mode_auto_name</item>
+    <item>@string/settings_key_mode_always_show_name</item>
+    <item>@string/settings_key_mode_always_hide_name</item>
+  </string-array>
+  <string-array name="settings_key_modes_values">
+    <item>@string/settings_key_mode_auto</item>
+    <item>@string/settings_key_mode_always_show</item>
+    <item>@string/settings_key_mode_always_hide</item>
+  </string-array>
     <string name="bigram_suggestion" msgid="1323347224043514969">"Suggerimenti sui bigrammi"</string>
     <string name="bigram_suggestion_summary" msgid="4383845146070101531">"Utilizza parola precedente per migliorare il suggerimento"</string>
+    <string name="prediction_none">0</string>
+    <string name="prediction_basic">1</string>
+    <string name="prediction_full">2</string>
   <string-array name="prediction_modes">
     <item msgid="4870266572388153286">"Nessuna"</item>
     <item msgid="1669461741568287396">"Base"</item>
     <item msgid="4894328801530136615">"Avanzate"</item>
+  </string-array>
+  <string-array name="prediction_modes_values">
+    <item>@string/prediction_none</item>
+    <item>@string/prediction_basic</item>
+    <item>@string/prediction_full</item>
   </string-array>
     <string name="added_word" msgid="8993883354622484372">"<xliff:g id="WORD">%s</xliff:g> : parola salvata"</string>
     <string name="tip_long_press" msgid="6101270866284343344">"Tieni premuto un tasto per vedere le lettere con segni diacritici (ø, ö etc.)"</string>
@@ -104,10 +119,17 @@
     <string name="cancel" msgid="6830980399865683324">"Annulla"</string>
     <string name="ok" msgid="7898366843681727667">"OK"</string>
     <string name="voice_input" msgid="2466640768843347841">"Comandi vocali"</string>
+    <string name="voice_mode_symbols">1</string>
+    <string name="voice_mode_off">2</string>
   <string-array name="voice_input_modes">
     <item msgid="1349082139076086774">"Su tastiera principale"</item>
     <item msgid="8529385602829095903">"Su tastiera simboli"</item>
     <item msgid="7283103513488381103">"Non attivi"</item>
+  </string-array>
+  <string-array name="voice_input_modes_values">
+    <item>@string/voice_mode_main</item>
+    <item>@string/voice_mode_symbols</item>
+    <item>@string/voice_mode_off</item>
   </string-array>
   <string-array name="voice_input_modes_summary">
     <item msgid="554248625705084903">"Microfono su tastiera principale"</item>
@@ -137,4 +159,25 @@
     <string name="keyboard_layout" msgid="437433231038683666">"Tema della tastiera"</string>
     <string name="subtype_mode_keyboard" msgid="2242090416595003881">"tastiera"</string>
     <string name="subtype_mode_voice" msgid="4394113125441627771">"vocale"</string>
+    <string name="layout_basic">Basic</string>
+    <string name="layout_high_contrast">Basic (alto contrasto)</string>
+    <string name="layout_stone_bold">Stone (grassetto)</string>
+    <string name="layout_stone_normal">Stone (normale)</string>
+    <string name="layout_gingerbread">Gingerbread</string>
+  <string-array name="keyboard_layout_modes">
+    <item>@string/layout_basic</item>
+    <item>@string/layout_high_contrast</item>
+    <item>@string/layout_stone_normal</item>
+    <item>@string/layout_stone_bold</item>
+    <item>@string/layout_gingerbread</item>
+  </string-array>
+  <string-array name="keyboard_layout_modes_values">
+    <item>0</item>
+    <item>1</item>
+    <item>2</item>
+    <item>3</item>
+    <item>4</item>
+  </string-array>
+    <string name="english_ime_debug_settings">Impostazioni di debug tastiera Android</string>
+    <string name="prefs_debug_mode">Modalità debug</string>
 </resources>
